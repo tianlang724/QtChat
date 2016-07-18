@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     mainwindow.cpp
 
 HEADERS  += login.h \
-    mainwindow.h
+    mainwindow.h \
+    common.h
 
 FORMS    += login.ui \
     mainwindow.ui

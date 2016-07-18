@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Login</string>
+   <string>登录界面</string>
   </property>
   <widget class="QLineEdit" name="user">
    <property name="geometry">
@@ -38,25 +38,25 @@
     <rect>
      <x>40</x>
      <y>50</y>
-     <width>31</width>
+     <width>41</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>user</string>
+    <string>用户名</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>50</x>
      <y>100</y>
-     <width>61</width>
+     <width>31</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>password</string>
+    <string>密码</string>
    </property>
   </widget>
   <widget class="QPushButton" name="signup">
@@ -69,7 +69,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>sign up</string>
+    <string>注册</string>
    </property>
   </widget>
   <widget class="QPushButton" name="signin">
@@ -82,7 +82,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>sign in</string>
+    <string>登录</string>
    </property>
   </widget>
  </widget>
