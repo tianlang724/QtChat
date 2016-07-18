@@ -20,7 +20,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>群聊</string>
   </property>
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
@@ -61,7 +61,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>fonts</string>
+           <string>字体</string>
           </property>
          </widget>
         </item>
@@ -77,7 +77,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>size</string>
+           <string>字体大小</string>
           </property>
          </widget>
         </item>
@@ -93,7 +93,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>color</string>
+           <string>字体颜色</string>
           </property>
          </widget>
         </item>
@@ -109,7 +109,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>others</string>
+           <string>其他功能</string>
           </property>
          </widget>
         </item>
@@ -146,7 +146,7 @@
         <item>
          <widget class="QPushButton" name="Buttom_Send">
           <property name="text">
-           <string>Send</string>
+           <string>发送</string>
           </property>
          </widget>
         </item>
