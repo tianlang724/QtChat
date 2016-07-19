@@ -200,34 +200,37 @@
   <connection>
    <sender>Comb_Font</sender>
    <signal>currentFontChanged(QFont)</signal>
-   <receiver>TextEdit_SendMsg</receiver>
-   <slot>setCurrentFont(QFont)</slot>
+   <receiver>mainwindow</receiver>
+   <slot>updateFontStyle()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>148</x>
-     <y>277</y>
+     <x>89</x>
+     <y>272</y>
     </hint>
     <hint type="destinationlabel">
-     <x>144</x>
-     <y>324</y>
+     <x>6</x>
+     <y>282</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>Comb_Font</sender>
-   <signal>currentFontChanged(QFont)</signal>
-   <receiver>TextEdit_SendMsg</receiver>
-   <slot>clear()</slot>
+   <sender>Comb_FontSize</sender>
+   <signal>currentIndexChanged(QString)</signal>
+   <receiver>mainwindow</receiver>
+   <slot>updateFontStyle()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>91</x>
-     <y>281</y>
+     <x>313</x>
+     <y>279</y>
     </hint>
     <hint type="destinationlabel">
-     <x>91</x>
-     <y>315</y>
+     <x>1</x>
+     <y>268</y>
     </hint>
    </hints>
   </connection>
  </connections>
+ <slots>
+  <slot>updateFontStyle()</slot>
+ </slots>
 </ui>

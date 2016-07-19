@@ -16,6 +16,9 @@ public:
     void initWidgets();
     ~mainwindow();
 
+public slots:
+    void updateFontStyle();
+
 private:
     Ui::mainwindow *ui;
 };

@@ -16,6 +16,19 @@ mainwindow::~mainwindow()
 
 void mainwindow::initWidgets() {
     QStringList fontSizeList;
-    fontSizeList << "1" << "2";
+    for (int i = 1; i < 50; i++) {
+        fontSizeList << QString::number(i, 10);
+    }
     ui->Comb_FontSize->addItems(fontSizeList);
+    /* 初始化字号ComboBox */
+}
+
+void mainwindow::updateFontStyle() {
+    ui->TextEdit_SendMsg->selectAll();
+    bool ok;
+//    QPalette pl = ui->TextEdit_SendMsg->palette();
+//    pl.setColor(QPalette::Text, QColor(Qt::blue));
+//    ui->TextEdit_SendMsg->setPalette(pl);
+    ui->TextEdit_SendMsg->setFontPointSize(ui->Comb_FontSize->currentText().toInt(&ok, 10));
+    ui->TextEdit_SendMsg->setFontFamily(ui->Comb_Font->currentFont().family());
 }
