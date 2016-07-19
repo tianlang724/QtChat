@@ -14,6 +14,7 @@ class mainwindow : public QWidget
 
 public:
     explicit mainwindow(QWidget *parent = 0);
+    void initWidgets();
     ~mainwindow();
 
 private:

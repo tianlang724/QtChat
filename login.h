@@ -1,7 +1,6 @@
 #ifndef LOGIN_H
-#include "mainwindow.h"
 #define LOGIN_H
-
+#include "mainwindow.h"
 #include <QWidget>
 
 namespace Ui {
@@ -22,6 +21,7 @@ private:
 
 public slots:
     void clicksignin();
+    void clicksignup();
 
 };
 

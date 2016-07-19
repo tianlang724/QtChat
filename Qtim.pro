@@ -4,8 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
-QT += network
+QT       += core gui sql network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,7 +20,11 @@ SOURCES += main.cpp\
 HEADERS  += login.h \
     mainwindow.h \
     common.h \
+<<<<<<< HEAD
     server.h
+=======
+    dboperation.h
+>>>>>>> 8f4e0f6977de7f5ee781cada56845297eac885d1
 
 FORMS    += login.ui \
     mainwindow.ui
