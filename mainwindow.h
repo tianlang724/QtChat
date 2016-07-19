@@ -19,6 +19,7 @@ public:
 
 public slots:
     void updateFontStyle();
+    void openColorSetting();
 
 private:
     Ui::mainwindow *ui;

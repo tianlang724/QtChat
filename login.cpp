@@ -7,11 +7,12 @@ Login::Login(QWidget *parent) :
     ui(new Ui::Login)
 {
     ui->setupUi(this);
+
+    /* 数据库的初始化 */
     QSqlError err = initDb();
     if (err.type() != QSqlError::NoError) {
         QMessageBox::critical(this, "初始化数据库出错", err.text());
     }
-    /* 数据库的初始化 */
 }
 
 Login::~Login()
