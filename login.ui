@@ -32,6 +32,9 @@
      <height>23</height>
     </rect>
    </property>
+   <property name="echoMode">
+    <enum>QLineEdit::Password</enum>
+   </property>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
@@ -105,9 +108,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>signup</sender>
+   <signal>clicked()</signal>
+   <receiver>Login</receiver>
+   <slot>clicksignup()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>79</x>
+     <y>163</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>79</x>
+     <y>188</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>signin()</signal>
+  <signal>signup()</signal>
   <slot>clicksignin()</slot>
+  <slot>clicksignup()</slot>
  </slots>
 </ui>
