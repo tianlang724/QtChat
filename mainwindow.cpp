@@ -3,7 +3,8 @@
 
 mainwindow::mainwindow(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::mainwindow)
+    ui(new Ui::mainwindow),
+    server(new Server)
 {
     ui->setupUi(this);
     initWidgets();

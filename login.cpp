@@ -23,11 +23,14 @@ void Login::clicksignin()
 {
     QString username = ui->user->text();
     QString userpwd = ui->password->text();
+    mw->username=username;
     QSqlQuery q;
     QString db_password = getUserPassword(q, username);
     if (db_password != NULL) {
          if (userpwd == db_password) {
              mw->show();
+             //登录成功，发送广播信息
+             mw->server->LoginBrocast(username);
              close();
              return;
          }

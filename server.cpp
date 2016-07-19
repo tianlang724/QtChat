@@ -3,16 +3,17 @@
 Server::Server()
 {
     //获取本机ip地址
-    QString localHostName = QHostInfo::localHostName();
-    QHostInfo info = QHostInfo::fromName(localHostName);
-    foreach(QHostAddress address,info.addresses())
+    QList<QHostAddress> vAddressList = QNetworkInterface::allAddresses();
+    for(int i=0;i<vAddressList.size();i++)
     {
-        if(address.protocol() == QAbstractSocket::IPv4Protocol)
-           {
-            mIP=address;
+        if((vAddressList.at(i)!=QHostAddress::LocalHost)&&(vAddressList.at(i).protocol()==QAbstractSocket::IPv4Protocol))
+          {
+            mIP=vAddressList.at(i);
             break;
-           }
-    }
+
+        }
+     }
+
     //初始化套接字和在线用户
     udpServerSocket=new QUdpSocket();
     udpServerSocket->bind(mIP,UDP_LISTEN_PORT);

@@ -16,10 +16,13 @@ public:
     explicit mainwindow(QWidget *parent = 0);
     void initWidgets();
     ~mainwindow();
+    QString username;
+    Server *server;
 
 private:
     Ui::mainwindow *ui;
-    Server *server;
+
+
 
 };
 
