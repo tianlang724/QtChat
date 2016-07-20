@@ -3,22 +3,26 @@
 Server::Server()
 {
     //获取本机ip地址
-    QString localHostName = QHostInfo::localHostName();
-    QHostInfo info = QHostInfo::fromName(localHostName);
-    foreach(QHostAddress address,info.addresses())
+    QList<QHostAddress> vAddressList = QNetworkInterface::allAddresses();
+    for(int i=0;i<vAddressList.size();i++)
     {
-        if(address.protocol() == QAbstractSocket::IPv4Protocol)
-           {
-            mIP=address;
+        if((vAddressList.at(i)!=QHostAddress::LocalHost)&&(vAddressList.at(i).protocol()==QAbstractSocket::IPv4Protocol))
+          {
+            mIP=vAddressList.at(i);
             break;
-           }
-    }
+
+        }
+     }
+
     //初始化套接字和在线用户
-    udpServerSocket=new QUdpSocket();
-    udpServerSocket->bind(mIP,UDP_LISTEN_PORT);
+    udpServerSocket=new QUdpSocket(this);
+    udpServerSocket->bind(UDP_LISTEN_PORT, QUdpSocket::ShareAddress);
     mOnlineUsrMap=new QMap<QString,QHostAddress>();
     //绑定发送按钮
     //connect(Buttom_Send, SIGNAL(clicked()), this, SLOT(SendProcess()));
+    //绑定接受函数
+    connect(udpServerSocket, SIGNAL(readyRead()),this, SLOT(ReadPendingData()));
+
 
 }
 void
@@ -35,6 +39,7 @@ Server::LoginBrocast(QString username)
     stream.writeEndElement();
     stream.writeEndDocument();
     udpServerSocket->writeDatagram(datagram.data(),datagram.size(),QHostAddress::Broadcast,UDP_LISTEN_PORT);
+
 }
 void
 Server::LogoutBrocast(QString username)
@@ -53,6 +58,7 @@ Server::LogoutBrocast(QString username)
 void
 Server::ReadPendingData()
 {
+
     while (udpServerSocket->hasPendingDatagrams())
     {
         QByteArray datagram;
@@ -60,6 +66,7 @@ Server::ReadPendingData()
         udpServerSocket->readDatagram(datagram.data(), datagram.size());
         ProcessRecvMsg(datagram);
     }
+
 }
 void
 Server::ProcessRecvMsg(QByteArray data)

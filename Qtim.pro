@@ -20,8 +20,8 @@ SOURCES += main.cpp\
 HEADERS  += login.h \
     mainwindow.h \
     common.h \
-    server.h \
-    dboperation.h
+    dboperation.h \
+    server.h
 
 FORMS    += login.ui \
     mainwindow.ui
