@@ -19,6 +19,10 @@ public:
     QString username;
     Server *server;
 
+public slots:
+    void updateFontStyle();
+    void openColorSetting();
+
 private:
     Ui::mainwindow *ui;
 
