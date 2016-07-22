@@ -13,9 +13,9 @@ class mainwindow : public QWidget
     Q_OBJECT
 
 public:
+    ~mainwindow();
     explicit mainwindow(QWidget *parent = 0);
     void initWidgets();
-    ~mainwindow();
     QString username;
     Server *server;
 
