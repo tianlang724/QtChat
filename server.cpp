@@ -1,4 +1,5 @@
 #include "server.h"
+#include "cmsgoperation.h"
 
 Server::Server()
 {
@@ -29,6 +30,7 @@ void
 Server::LoginBrocast(QString username)
 {
 
+    /*
     QByteArray datagram;
     QXmlStreamWriter stream(&datagram);
     stream.setAutoFormatting(true);
@@ -38,6 +40,9 @@ Server::LoginBrocast(QString username)
     stream.writeTextElement("ip",mIP.toString());
     stream.writeEndElement();
     stream.writeEndDocument();
+    */
+    QByteArray datagram=CMsgOperation::createBroadcast(1, username, mIP.toString());
+
     udpServerSocket->writeDatagram(datagram.data(),datagram.size(),QHostAddress::Broadcast,UDP_LISTEN_PORT);
 
 }
@@ -65,46 +70,44 @@ Server::ReadPendingData()
         datagram.resize(udpServerSocket->pendingDatagramSize());
         udpServerSocket->readDatagram(datagram.data(), datagram.size());
         ProcessRecvMsg(datagram);
+       // qDebug(datagram.data());
     }
 
 }
 void
 Server::ProcessRecvMsg(QByteArray data)
 {
-    readXml.addData(data);
-    while (readXml.readNextStartElement()) {
-        if (readXml.name() == "LOGIN"||readXml.name() == "LOGOUT")
-            ProcessControlMsg();
-        else if (readXml.name() == "DATA")
-            ProcessDataMsg();
-        else
-            readXml.skipCurrentElement();
+
+    QJsonObject json=CMsgOperation::getJsonObject(data);
+    QStringList keyList = json.keys();
+    QStringList::iterator it=keyList.begin();
+    if((*it)=="data") {
+        //收到一般数据
+
     }
+    else if((*it)=="online"||(*it)=="offline") {
+        QString username=NULL;
+        QString ipString=NULL;
+        QJsonObject attr=json.value(*it).toObject();
+        username=attr.value("userName").toString();
+        ipString=attr.value("ipAddress").toString();
+        QHostAddress ip=QHostAddress(ipString);
+        if((*it)=="online"){
+            mOnlineUsrMap->insert(username,ip);
+            //构造信号函数，通知窗口更新用户列表
+        }
+        else if((*it)=="offline"){
+            QMap<QString,QHostAddress>::iterator it;
+            it= mOnlineUsrMap->find(username);
+            if(it!=mOnlineUsrMap->end()){
+               mOnlineUsrMap->erase(it);
+               //用户下线了，构造信号函数，通知窗口更新用户列表
+               }
+        }
+    }
+
 }
-void
-Server::ProcessControlMsg()
-{
-    QString username;
-    QString ipString;
-    ipString=readXml.readElementText();
-    QHostAddress ip=QHostAddress(ipString);
-    username=readXml.attributes().value("username").toString();
-    if(readXml.name() == "LOGIN")
-        {
-        mOnlineUsrMap->insert(username,ip);
-        //用户上线了
-    }
-    else if(readXml.name() == "LOGOUT")
-        {
-        QMap<QString,QHostAddress>::iterator it;
-       it= mOnlineUsrMap->find(username);
-       if(it!=mOnlineUsrMap->end())
-           {
-           mOnlineUsrMap->erase(it);
-           //用户下线了
-           }
-    }
-}
+
 void
 Server::SendProcess()
 {
