@@ -1,6 +1,5 @@
 #ifndef SERVER_H
 #define SERVER_H
-#include "common.h"
 #include <QtNetwork>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
@@ -8,14 +7,14 @@ class QUdpSocket;
 class list;
 class Server:QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
     Server();
     //广播上线消息
     void LoginBrocast(QString username);
     //广播下线消息
     void LogoutBrocast(QString username);
-   //处理收到的聊天消息
+    //处理收到的聊天消息
     void ProcessDataMsg();
     //处理收到的数据
     void ProcessRecvMsg(QByteArray data);
@@ -30,7 +29,7 @@ private slots:
     void SendProcess();
     //读取收到的数据
     void ReadPendingData();
- 
+
 
 private:
     //服务器的套接字

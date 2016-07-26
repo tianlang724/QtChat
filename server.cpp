@@ -1,6 +1,8 @@
 #include "server.h"
 #include "cmsgoperation.h"
 
+#define UDP_LISTEN_PORT 6666
+
 Server::Server()
 {
     //获取本机ip地址
@@ -8,12 +10,11 @@ Server::Server()
     for(int i=0;i<vAddressList.size();i++)
     {
         if((vAddressList.at(i)!=QHostAddress::LocalHost)&&(vAddressList.at(i).protocol()==QAbstractSocket::IPv4Protocol))
-          {
+        {
             mIP=vAddressList.at(i);
             break;
-
         }
-     }
+    }
 
     //初始化套接字和在线用户
     udpServerSocket=new QUdpSocket(this);
@@ -29,20 +30,7 @@ Server::Server()
 void
 Server::LoginBrocast(QString username)
 {
-
-    /*
-    QByteArray datagram;
-    QXmlStreamWriter stream(&datagram);
-    stream.setAutoFormatting(true);
-    stream.writeStartDocument();
-    stream.writeStartElement("LOGIN");
-    stream.writeAttribute("username",username);
-    stream.writeTextElement("ip",mIP.toString());
-    stream.writeEndElement();
-    stream.writeEndDocument();
-    */
     QByteArray datagram=CMsgOperation::createBroadcast(1, username, mIP.toString());
-
     udpServerSocket->writeDatagram(datagram.data(),datagram.size(),QHostAddress::Broadcast,UDP_LISTEN_PORT);
 
 }
@@ -70,7 +58,7 @@ Server::ReadPendingData()
         datagram.resize(udpServerSocket->pendingDatagramSize());
         udpServerSocket->readDatagram(datagram.data(), datagram.size());
         ProcessRecvMsg(datagram);
-       // qDebug(datagram.data());
+        // qDebug(datagram.data());
     }
 
 }
@@ -100,9 +88,9 @@ Server::ProcessRecvMsg(QByteArray data)
             QMap<QString,QHostAddress>::iterator it;
             it= mOnlineUsrMap->find(username);
             if(it!=mOnlineUsrMap->end()){
-               mOnlineUsrMap->erase(it);
-               //用户下线了，构造信号函数，通知窗口更新用户列表
-               }
+                mOnlineUsrMap->erase(it);
+                //用户下线了，构造信号函数，通知窗口更新用户列表
+            }
         }
     }
 

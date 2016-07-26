@@ -52,16 +52,14 @@ QByteArray CMsgOperation::createChatMsg(bool isBroadcast, QString fontFamily, in
     chatContentMap.insert("content", textContent);
     chatContentMap.insert("fontStyle", fontStyle);
     if (!isBroadcast) {
-        QVariant ipAddressVariant(ipAddress);
-        QVariant portVariant(port);
         QMap<QString, QVariant> networkInfoMap;
-        networkInfoMap.insert("fromIP", ipAddress);
-        networkInfoMap.insert("fromPort", port);
+        networkInfoMap.insert("fromIP", QVariant(ipAddress));
+        networkInfoMap.insert("fromPort", QVariant(port));
         chatContentMap.insert("networkInfo", QVariant(networkInfoMap));
     }
     QVariant chatMsgContent(chatContentMap);
     QMap<QString, QVariant> chatMsgMap;
     chatMsgMap.insert("chatMsg", chatMsgContent);
     QJsonDocument chatMsgDocument(QJsonObject::fromVariantMap(chatMsgMap));
-    return chatMsgDocument.toBinaryData();
+    return chatMsgDocument.toJson();
 }
