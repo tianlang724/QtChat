@@ -17,15 +17,15 @@ SOURCES += main.cpp\
     mainwindow.cpp \
     server.cpp \
     cmsgoperation.cpp \
-    csoftwareconfig.cpp
+    csoftwareconfig.cpp \
+    cdatabaseoperation.cpp
 
 HEADERS  += login.h \
     mainwindow.h \
-    common.h \
-    dboperation.h \
     server.h \
     cmsgoperation.h \
-    csoftwareconfig.h
+    csoftwareconfig.h \
+    cdatabaseoperation.h
 
 FORMS    += login.ui \
     mainwindow.ui
