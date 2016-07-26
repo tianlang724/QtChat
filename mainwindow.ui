@@ -34,15 +34,18 @@
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
        <item>
-        <widget class="QTextBrowser" name="TextBrow_ChatMsg">
-         <property name="enabled">
+        <widget class="QTextEdit" name="TextEdit_RecvMsg">
+         <property name="undoRedoEnabled">
           <bool>true</bool>
          </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>2</horstretch>
-           <verstretch>2</verstretch>
-          </sizepolicy>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="acceptRichText">
+          <bool>true</bool>
+         </property>
+         <property name="textInteractionFlags">
+          <set>Qt::NoTextInteraction</set>
          </property>
         </widget>
        </item>
@@ -111,7 +114,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QPlainTextEdit" name="TextEdit_SendMsg"/>
+        <widget class="QTextEdit" name="TextEdit_SendMsg"/>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="2,0">
@@ -170,70 +173,6 @@
  <resources/>
  <connections>
   <connection>
-   <sender>Comb_Font</sender>
-   <signal>currentFontChanged(QFont)</signal>
-   <receiver>mainwindow</receiver>
-   <slot>updateFontStyle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>89</x>
-     <y>272</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>6</x>
-     <y>282</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>SBox_FontSize</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>mainwindow</receiver>
-   <slot>updateFontStyle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>330</x>
-     <y>270</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>2</x>
-     <y>263</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CB_Italic</sender>
-   <signal>stateChanged(int)</signal>
-   <receiver>mainwindow</receiver>
-   <slot>updateFontStyle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>444</x>
-     <y>275</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>388</x>
-     <y>229</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CB_Bold</sender>
-   <signal>stateChanged(int)</signal>
-   <receiver>mainwindow</receiver>
-   <slot>updateFontStyle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>498</x>
-     <y>275</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>388</x>
-     <y>229</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>Buttom_Color</sender>
    <signal>clicked()</signal>
    <receiver>mainwindow</receiver>
@@ -249,9 +188,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>Buttom_Send</sender>
+   <signal>clicked()</signal>
+   <receiver>mainwindow</receiver>
+   <slot>updateViewText()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>582</x>
+     <y>435</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>6</x>
+     <y>330</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>updateFontStyle()</slot>
   <slot>openColorSetting()</slot>
+  <slot>updateViewText()</slot>
  </slots>
 </ui>

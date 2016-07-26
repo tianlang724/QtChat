@@ -54,7 +54,6 @@ QByteArray CMsgOperation::createChatMsg(QString username, QString fontFamily, in
     chatContentMap.insert("content", textContent);
     chatContentMap.insert("fontStyle", fontStyleMapVar);
     QVariant chatMsgContent(chatContentMap);
-
     QMap<QString, QVariant> chatMsgMap;
     chatMsgMap.insert("chatMsg", chatMsgContent);
     QJsonDocument chatMsgDocument(QJsonObject::fromVariantMap(chatMsgMap));

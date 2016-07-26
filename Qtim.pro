@@ -26,6 +26,15 @@ HEADERS  += login.h \
     csoftwareconfig.h \
     cudpbase.h\
     server.h
+    cdatabaseoperation.cpp
+
+HEADERS  += login.h \
+    mainwindow.h \
+    server.h \
+    cmsgoperation.h \
+    csoftwareconfig.h \
+    cdatabaseoperation.h
+
 
 FORMS    += login.ui \
     mainwindow.ui

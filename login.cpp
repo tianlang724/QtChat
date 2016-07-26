@@ -1,5 +1,4 @@
 #include "login.h"
-#include "dboperation.h"
 #include "ui_login.h"
 
 Login::Login(QWidget *parent) :
@@ -9,7 +8,7 @@ Login::Login(QWidget *parent) :
     ui->setupUi(this);
 
     /* 数据库的初始化 */
-    QSqlError err = initDb();
+    QSqlError err = CDatabaseOperation::initDb();
     if (err.type() != QSqlError::NoError) {
         QMessageBox::critical(this, "初始化数据库出错", err.text());
     }
@@ -26,17 +25,19 @@ void Login::clicksignin()
     QString userpwd = ui->password->text();
     mw->username=username;
     QSqlQuery q;
-    QString db_password = getUserPassword(q, username);
+    QString db_password = CDatabaseOperation::getUserPassword(q, username);
     if (db_password != NULL) {
-         if (userpwd == db_password) {
-             mw->show();
-             //登录成功，发送广播信息
-             mw->server->LoginBrocast(username);
-             close();
-             return;
-         }
-         QMessageBox::information(this, "提示", "用户名密码错误");
-         return;
+        if (userpwd == db_password) {
+            //登录成功，发送广播信息
+            mw->server->LoginBrocast(username);
+            CDatabaseOperation::getWidgetConfig(q, username, mw->widgetconfig);
+            mw->configWidgets();
+            mw->show();
+            close();
+            return;
+        }
+        QMessageBox::information(this, "提示", "用户名密码错误");
+        return;
     }
     QMessageBox::information(this, "提示", "用户名不存在");
     return;
@@ -44,24 +45,24 @@ void Login::clicksignin()
 
 void Login::clicksignup()
 {
-   QString username = ui->user->text();
-   QString userpwd = ui->password->text();
-   QSqlQuery q;
-   if (!q.exec("select * from userinfo")) {
-       QMessageBox::critical(this, "读取数据库出错", q.lastError().text());
-       return;
-   }
-   while (q.next()) {
-       QString db_username = q.value(0).toString();
-       if (db_username == username) {
+    QString username = ui->user->text();
+    QString userpwd = ui->password->text();
+    QSqlQuery q;
+    if (!q.exec("select * from userinfo")) {
+        QMessageBox::critical(this, "读取数据库出错", q.lastError().text());
+        return;
+    }
+    while (q.next()) {
+        QString db_username = q.value(0).toString();
+        if (db_username == username) {
             QMessageBox::information(this, "提示", "用户名" + username + "已存在，无须注册！");
             return;
-       }
-   }
-   QSqlError err = addUser(q, username, userpwd);
-   if (err.type() != QSqlError::NoError) {
-       QMessageBox::critical(this, "无法添加新用户", err.text());
-       return;
-   }
-   QMessageBox::information(this, "提示", "新用户" + username + "已成功添加");
+        }
+    }
+    QSqlError err = CDatabaseOperation::addUser(q, username, userpwd);
+    if (err.type() != QSqlError::NoError) {
+        QMessageBox::critical(this, "无法添加新用户", err.text());
+        return;
+    }
+    QMessageBox::information(this, "提示", "新用户" + username + "已成功添加");
 }
