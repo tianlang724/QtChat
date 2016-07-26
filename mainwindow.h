@@ -27,12 +27,6 @@ public:
     explicit mainwindow(QWidget *parent = 0);
     void initWidgets();
 
-    void CreateLabel();
-
-    // 服务器
-    QString username;
-    Server *server;
-
     void configWidgets();
     QString username;
     Server *server;
@@ -49,15 +43,13 @@ public slots:
     void RemoveOnlineMember(QString username);
     void ShowMemberDetial(QListWidgetItem *item);
     void PointToPointChat(QListWidgetItem *item);
-
-private:
-    Ui::mainwindow *ui;
+    void updateViewText();
 
 protected:
      void closeEvent(QCloseEvent *event) override;
 
 
-    void updateViewText();
+
 
 };
 
