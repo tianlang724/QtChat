@@ -11,9 +11,8 @@ public:
     CMsgOperation();
     static QByteArray createBroadcast(int mode, QString username, QString ipAddress);
     static QJsonObject getJsonObject(QByteArray byteArray);
-    static QByteArray createChatMsg(bool isBroadcast, QString fontFamily, int fontPointSize,
-                                    QColor color, bool itatic, bool bold, QString textContent,
-                                    QString ipAddress = NULL, QString port = NULL);
+    static QByteArray createChatMsg(QString username, QString fontFamily, int fontPointSize,
+                                    QColor color, bool itatic, bool bold, QString textContent);
 };
 
 #endif // CMSGOPERATION_H
