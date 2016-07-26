@@ -26,9 +26,6 @@ public:
     QString username;
     Server *server;
 
-    //ui
-
-
 
 public slots:
     void updateFontStyle();
@@ -41,7 +38,8 @@ public slots:
 private:
     Ui::mainwindow *ui;
 
-
+protected:
+     void closeEvent(QCloseEvent *event) override;
 
 };
 

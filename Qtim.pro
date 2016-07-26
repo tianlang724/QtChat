@@ -14,16 +14,18 @@ TEMPLATE = app
 SOURCES += main.cpp\
         login.cpp \
     mainwindow.cpp \
-    server.cpp \
     cmsgoperation.cpp \
-    csoftwareconfig.cpp
+    csoftwareconfig.cpp \
+    cudpbase.cpp \
+    server.cpp
 
 HEADERS  += login.h \
     mainwindow.h \
     dboperation.h \
-    server.h \
     cmsgoperation.h \
-    csoftwareconfig.h
+    csoftwareconfig.h \
+    cudpbase.h\
+    server.h
 
 FORMS    += login.ui \
     mainwindow.ui

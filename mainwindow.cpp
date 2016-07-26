@@ -95,7 +95,29 @@ void mainwindow::ShowMemberDetial(QListWidgetItem *item)
    QToolTip::showText(cursor().pos(),"username: "+usrname+"\n"+"IP："+ip);
 
 }
+/* 建立私聊窗口
+ * */
 void mainwindow::PointToPointChat(QListWidgetItem *item)
 {
+
+}
+/*
+ * 关闭主窗口的时候进行提示，并发送广播退出消息
+ * */
+void mainwindow::closeEvent(QCloseEvent *event)
+{
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Information);
+    msgBox.setWindowTitle("提示");
+    msgBox.setInformativeText("确定关闭所有聊天窗口吗?");
+    QAbstractButton *discardButton =msgBox.addButton(tr("取消"), QMessageBox::ActionRole);
+    QAbstractButton *okButton =msgBox.addButton(tr("确定"), QMessageBox::ActionRole);
+    msgBox.exec();
+    if(msgBox.clickedButton()==okButton){
+        server->LogoutBrocast(username);
+        event->accept();
+    }
+    else if(msgBox.clickedButton()==discardButton)
+        event->ignore();
 
 }
