@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += core gui sql network
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Qtim
@@ -21,7 +20,6 @@ SOURCES += main.cpp\
 
 HEADERS  += login.h \
     mainwindow.h \
-    common.h \
     dboperation.h \
     server.h \
     cmsgoperation.h \
