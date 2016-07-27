@@ -1,26 +1,24 @@
 #ifndef CSOFTWARECONFIG_H
 #define CSOFTWARECONFIG_H
 #include <QString>
-#include <QFont>
-#include <QColor>
-
-class CSoftwareConfig
+struct FontStruct
 {
-public:
-    CSoftwareConfig();
-    //CSoftwareConfig(QFont,QColor);
-
-/* 字体设置 */
-public:
-    QString chatMsg;
-    QString chatUsr;
     QString fontFamily;
     int fontPointSize;
     bool itatic;
     bool bold;
-    int r;
-    int b;
-    int g;
+    int colorR;
+    int colorB;
+    int colorG;
+
+};
+class CSoftwareConfig
+{
+public:
+    CSoftwareConfig();
+    QString chatMsg;
+    QString chatUsr;
+    struct FontStruct fontConfig;
 };
 
 #endif // CSOFTWARECONFIG_H
