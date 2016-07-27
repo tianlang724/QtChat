@@ -4,6 +4,7 @@
 #include <QColor>
 #include <QMap>
 #include <QVariant>
+#include "csoftwareconfig.h"
 
 class CMsgOperation
 {
@@ -13,6 +14,7 @@ public:
     static QJsonObject getJsonObject(QByteArray byteArray);
     static QByteArray createChatMsg(QString username, QString fontFamily, int fontPointSize,
                                     QColor color, bool itatic, bool bold, QString textContent);
+    static QByteArray createChatMsg(CSoftwareConfig config);
 };
 
 #endif // CMSGOPERATION_H
