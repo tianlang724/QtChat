@@ -112,13 +112,14 @@ QSqlError CDatabaseOperation::getWidgetConfig(QSqlQuery &q, QString username, CS
         return QSqlError();
     }
     if(q.next()) {
-        config->editTextFontStyle.setFamily(q.value(1).toString());
-        config->editTextFontStyle.setPointSize(q.value(2).toInt());
-        config->editTextFontColor = QColor(q.value(3).toInt(), q.value(4).toInt(), q.value(5).toInt());
-        bool isItatic = q.value(6).toInt() == 1 ? true : false;
-        bool isBold = q.value(7).toInt() == 1 ? true : false;
-        config->editTextFontStyle.setItalic(isItatic);
-        config->editTextFontStyle.setBold(isBold);
+        config->chatUsr = username;
+        config->fontConfig.fontFamily = q.value(1).toString();
+        config->fontConfig.fontPointSize = q.value(2).toInt();
+        config->fontConfig.colorR = q.value(3).toInt();
+        config->fontConfig.colorG = q.value(4).toInt();
+        config->fontConfig.colorB = q.value(5).toInt();
+        config->fontConfig.itatic = q.value(6).toInt() == 1 ? true : false;
+        config->fontConfig.bold = q.value(7).toInt() == 1 ? true : false;
     }
     return QSqlError();
 }

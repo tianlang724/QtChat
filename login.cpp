@@ -31,7 +31,7 @@ void Login::clicksignin()
         if (userpwd == db_password) {
             //登录成功，发送广播信息
             mw->server->LoginBrocast(username);
-            CDatabaseOperation::getWidgetConfig(q, username, mw->widgetconfig);
+            CDatabaseOperation::getWidgetConfig(q, username, mw->sendMsgConfig);
             mw->configWidgets();
             mw->show();
             close();
