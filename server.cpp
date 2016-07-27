@@ -1,7 +1,8 @@
+
 #include "server.h"
-#include "cmsgoperation.h"
 
 #define UDP_LISTEN_PORT 6666
+
 
 Server::Server()
 {
@@ -11,67 +12,48 @@ Server::Server()
     {
         if((vAddressList.at(i)!=QHostAddress::LocalHost)&&(vAddressList.at(i).protocol()==QAbstractSocket::IPv4Protocol))
         {
-            mIP=vAddressList.at(i);
+            myIP=vAddressList.at(i);
             break;
         }
     }
+    remoteIP=QHostAddress::Broadcast;
+    myUpdPort=UDP_LISTEN_PORT;
+    remoteUpdPort=UDP_LISTEN_PORT;
 
     //初始化套接字和在线用户
-    udpServerSocket=new QUdpSocket(this);
-    udpServerSocket->bind(UDP_LISTEN_PORT, QUdpSocket::ShareAddress);
+    udpSocket=new QUdpSocket(this);
+    udpSocket->bind(myUpdPort, QUdpSocket::ShareAddress);
     mOnlineUsrMap=new QMap<QString,QHostAddress>();
-    //绑定发送按钮
-    //connect(Buttom_Send, SIGNAL(clicked()), this, SLOT(SendProcess()));
     //绑定接受函数
-    connect(udpServerSocket, SIGNAL(readyRead()),this, SLOT(ReadPendingData()));
-
-
+    connect(udpSocket, SIGNAL(readyRead()),this, SLOT(ReadPendingData()));
 }
 void
 Server::LoginBrocast(QString username)
 {
-    QByteArray datagram=CMsgOperation::createBroadcast(1, username, mIP.toString());
-    udpServerSocket->writeDatagram(datagram.data(),datagram.size(),QHostAddress::Broadcast,UDP_LISTEN_PORT);
+
+    qDebug("广播上线消息");
+    QByteArray datagram=CMsgOperation::createBroadcast(1, username, myIP.toString());
+    udpSocket->writeDatagram(datagram.data(),datagram.size(),remoteIP,remoteUpdPort);
 
 }
 void
 Server::LogoutBrocast(QString username)
 {
-    QByteArray datagram;
-    QXmlStreamWriter stream(&datagram);
-    stream.setAutoFormatting(true);
-    stream.writeStartDocument();
-    stream.writeStartElement("LOGOUT");
-    stream.writeAttribute("username",username);
-    stream.writeTextElement("ip",mIP.toString());
-    stream.writeEndElement();
-    stream.writeEndDocument();
-    udpServerSocket->writeDatagram(datagram.data(),datagram.size(),QHostAddress::Broadcast,UDP_LISTEN_PORT);
+    qDebug("广播下线消息");
+    QByteArray datagram=CMsgOperation::createBroadcast(0, username, myIP.toString());
+    udpSocket->writeDatagram(datagram.data(),datagram.size(),remoteIP,remoteUpdPort);
 }
-void
-Server::ReadPendingData()
-{
 
-    while (udpServerSocket->hasPendingDatagrams())
-    {
-        QByteArray datagram;
-        datagram.resize(udpServerSocket->pendingDatagramSize());
-        udpServerSocket->readDatagram(datagram.data(), datagram.size());
-        ProcessRecvMsg(datagram);
-        // qDebug(datagram.data());
-    }
-
-}
 void
 Server::ProcessRecvMsg(QByteArray data)
 {
-
     QJsonObject json=CMsgOperation::getJsonObject(data);
     QStringList keyList = json.keys();
     QStringList::iterator it=keyList.begin();
-    if((*it)=="data") {
+    if((*it)=="chatMsg"){
         //收到一般数据
-
+        QJsonObject dataJson=json.value(*it).toObject();
+        ProcessDataMsg(dataJson);
     }
     else if((*it)=="online"||(*it)=="offline") {
         QString username=NULL;
@@ -83,6 +65,7 @@ Server::ProcessRecvMsg(QByteArray data)
         if((*it)=="online"){
             mOnlineUsrMap->insert(username,ip);
             //构造信号函数，通知窗口更新用户列表
+            emit NewUsrOnline(username);
         }
         else if((*it)=="offline"){
             QMap<QString,QHostAddress>::iterator it;
@@ -90,19 +73,12 @@ Server::ProcessRecvMsg(QByteArray data)
             if(it!=mOnlineUsrMap->end()){
                 mOnlineUsrMap->erase(it);
                 //用户下线了，构造信号函数，通知窗口更新用户列表
+                emit OldUsrOffline(username);
+
             }
         }
     }
 
 }
 
-void
-Server::SendProcess()
-{
 
-}
-void
-Server::ProcessDataMsg()
-{
-
-}

@@ -26,10 +26,10 @@ QJsonObject CMsgOperation::getJsonObject(QByteArray byteArray)
     return broadcastDocument.object();
 }
 
-QByteArray CMsgOperation::createChatMsg(bool isBroadcast, QString fontFamily, int fontPointSize,
-                                        QColor color, bool itatic, bool bold, QString textContent,
-                                        QString ipAddress,QString port)
+QByteArray CMsgOperation::createChatMsg(QString username, QString fontFamily, int fontPointSize,
+                                        QColor color, bool itatic, bool bold, QString textContent)
 {
+    //设置字体相关
     QMap<QString, QVariant> fontStyleMap;
     QVariant fontFamilyVariant(fontFamily);
     QVariant fontPointSizeVariant(fontPointSize);
@@ -47,16 +47,12 @@ QByteArray CMsgOperation::createChatMsg(bool isBroadcast, QString fontFamily, in
     rbgVariant.insert("g", g);
     QVariant colorStyle(rbgVariant);
     fontStyleMap.insert("color", colorStyle);
-    QVariant fontStyle(fontStyleMap);
+    QVariant fontStyleMapVar(fontStyleMap);
+
     QMap<QString, QVariant> chatContentMap;
+    chatContentMap.insert("userName",username);
     chatContentMap.insert("content", textContent);
-    chatContentMap.insert("fontStyle", fontStyle);
-    if (!isBroadcast) {
-        QMap<QString, QVariant> networkInfoMap;
-        networkInfoMap.insert("fromIP", QVariant(ipAddress));
-        networkInfoMap.insert("fromPort", QVariant(port));
-        chatContentMap.insert("networkInfo", QVariant(networkInfoMap));
-    }
+    chatContentMap.insert("fontStyle", fontStyleMapVar);
     QVariant chatMsgContent(chatContentMap);
     QMap<QString, QVariant> chatMsgMap;
     chatMsgMap.insert("chatMsg", chatMsgContent);
