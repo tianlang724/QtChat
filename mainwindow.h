@@ -30,7 +30,8 @@ public:
     void configWidgets();
     QString username;
     Server *server;
-    CSoftwareConfig *widgetconfig;
+    CSoftwareConfig *sendMsgConfig;
+    CSoftwareConfig *recvWidgetConfig;
 
 
 

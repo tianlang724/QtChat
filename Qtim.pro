@@ -22,7 +22,6 @@ SOURCES += main.cpp\
 
 HEADERS  += login.h \
     mainwindow.h \
-    dboperation.h \
     cmsgoperation.h \
     csoftwareconfig.h \
     cudpbase.h\

@@ -11,7 +11,8 @@ mainwindow::mainwindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::mainwindow),
     server(new Server),
-    widgetconfig(new CSoftwareConfig)
+    sendMsgConfig(new CSoftwareConfig),
+    recvWidgetConfig(new CSoftwareConfig)
 {
     ui->setupUi(this);
     initWidgets();
@@ -36,10 +37,9 @@ mainwindow::mainwindow(QWidget *parent) :
 mainwindow::~mainwindow()
 {
     QSqlQuery q;
-    int r, g, b;
-    widgetconfig->editTextFontColor.getRgb(&r, &g, &b);
-    CDatabaseOperation::addUserConfig(q, username, widgetconfig->editTextFontStyle.family(), widgetconfig->editTextFontStyle.pointSize(),
-                  r, g, b, widgetconfig->editTextFontStyle.italic(), widgetconfig->editTextFontStyle.bold());
+    CDatabaseOperation::addUserConfig(q, username, sendMsgConfig->fontConfig.fontFamily, sendMsgConfig->fontConfig.fontPointSize,
+                                      sendMsgConfig->fontConfig.colorR, sendMsgConfig->fontConfig.colorG, sendMsgConfig->fontConfig.colorB,
+                                      sendMsgConfig->fontConfig.itatic, sendMsgConfig->fontConfig.bold);
     delete ui;
 }
 
@@ -56,16 +56,21 @@ void mainwindow::setColor(QColor color) {
 }
 
 void mainwindow::configWidgets() {
-    ui->SBox_FontSize->setValue(widgetconfig->editTextFontStyle.pointSize());
-    ui->Comb_Font->setCurrentFont(widgetconfig->editTextFontStyle);
-    ui->TextEdit_SendMsg->setFont(widgetconfig->editTextFontStyle);
-    if (widgetconfig->editTextFontStyle.italic()) {
+    ui->SBox_FontSize->setValue(sendMsgConfig->fontConfig.fontPointSize);
+    QFont currentFont;
+    currentFont.setFamily(sendMsgConfig->fontConfig.fontFamily);
+    currentFont.setPointSize(sendMsgConfig->fontConfig.fontPointSize);
+    currentFont.setItalic(sendMsgConfig->fontConfig.itatic);
+    currentFont.setBold(sendMsgConfig->fontConfig.bold);
+    ui->Comb_Font->setCurrentFont(currentFont);
+    ui->TextEdit_SendMsg->setFont(currentFont);
+    if (sendMsgConfig->fontConfig.itatic) {
         ui->CB_Italic->setCheckState(Qt::Checked);
     }
-    if (widgetconfig->editTextFontStyle.bold()) {
+    if (sendMsgConfig->fontConfig.bold) {
         ui->CB_Bold->setCheckState(Qt::Checked);
     }
-    setColor(widgetconfig->editTextFontColor);
+    setColor(QColor(sendMsgConfig->fontConfig.colorR, sendMsgConfig->fontConfig.colorG, sendMsgConfig->fontConfig.colorB));
     connect(ui->SBox_FontSize, SIGNAL(valueChanged(int)), this, SLOT(updateFontStyle()));
     connect(ui->Comb_Font, SIGNAL(currentFontChanged(QFont)), this, SLOT(updateFontStyle()));
     connect(ui->CB_Bold, SIGNAL(stateChanged(int)), this, SLOT(updateFontStyle()));
@@ -76,29 +81,37 @@ void mainwindow::configWidgets() {
  * 功能：更新输入框字体大小和样式
  * */
 void mainwindow::updateFontStyle() {
-    widgetconfig->editTextFontStyle = ui->Comb_Font->currentFont();
-    widgetconfig->editTextFontStyle.setPointSize(ui->SBox_FontSize->value());
+    QFont currentFont = ui->Comb_Font->currentFont();
+    sendMsgConfig->fontConfig.fontPointSize = ui->SBox_FontSize->value();
+    sendMsgConfig->fontConfig.fontFamily = currentFont.family();
+//    widgetconfig->editTextFontStyle = ui->Comb_Font->currentFont();
+//    widgetconfig->editTextFontStyle.setPointSize(ui->SBox_FontSize->value());
     if (ui->CB_Italic->isChecked()) {
-        widgetconfig->editTextFontStyle.setItalic(true);
+        sendMsgConfig->fontConfig.itatic = true;
+        currentFont.setItalic(sendMsgConfig->fontConfig.itatic);
     }
     else {
-        widgetconfig->editTextFontStyle.setItalic(false);
+        sendMsgConfig->fontConfig.itatic = false;
+        currentFont.setItalic(sendMsgConfig->fontConfig.itatic);
     }
     if (ui->CB_Bold->isChecked()) {
-        widgetconfig->editTextFontStyle.setBold(true);
+        sendMsgConfig->fontConfig.bold = true;
+        currentFont.setBold(sendMsgConfig->fontConfig.bold);
     }
     else {
-        widgetconfig->editTextFontStyle.setBold(false);
+        sendMsgConfig->fontConfig.bold = false;
+        currentFont.setBold(sendMsgConfig->fontConfig.bold);
     }
-    ui->TextEdit_SendMsg->setFont(widgetconfig->editTextFontStyle);
+    ui->TextEdit_SendMsg->setFont(currentFont);
 }
 
 /*
  * 功能：设置输入框字体颜色
  * */
 void mainwindow::openColorSetting() {
-    widgetconfig->editTextFontColor = QColorDialog::getColor();
-    setColor(widgetconfig->editTextFontColor);
+    QColor currentColor = QColorDialog::getColor();
+    currentColor.getRgb(&sendMsgConfig->fontConfig.colorR, &sendMsgConfig->fontConfig.colorG, &sendMsgConfig->fontConfig.colorB);
+    setColor(currentColor);
 }
 void mainwindow::GetSendInformationSlot()
 {
@@ -128,11 +141,11 @@ void mainwindow::updateViewText() {
     ui->TextEdit_RecvMsg->append(username + " 说:");
     ui->TextEdit_RecvMsg->setAlignment(Qt::AlignLeft);
     ui->TextEdit_RecvMsg->setTextBackgroundColor(Qt::GlobalColor::transparent);
-    ui->TextEdit_RecvMsg->setFontFamily(widgetconfig->editTextFontStyle.family());
-    ui->TextEdit_RecvMsg->setFontPointSize(widgetconfig->editTextFontStyle.pointSize());
-    ui->TextEdit_RecvMsg->setFontItalic(widgetconfig->editTextFontStyle.italic());
-    ui->TextEdit_RecvMsg->setFontWeight(widgetconfig->editTextFontStyle.bold() == 1 ? QFont::Bold: QFont::Thin);
-    ui->TextEdit_RecvMsg->setTextColor(widgetconfig->editTextFontColor);
+    ui->TextEdit_RecvMsg->setFontFamily(sendMsgConfig->fontConfig.fontFamily);
+    ui->TextEdit_RecvMsg->setFontPointSize(sendMsgConfig->fontConfig.fontPointSize);
+    ui->TextEdit_RecvMsg->setFontItalic(sendMsgConfig->fontConfig.itatic);
+    ui->TextEdit_RecvMsg->setFontWeight(sendMsgConfig->fontConfig.bold == true ? QFont::Bold: QFont::Thin);
+    ui->TextEdit_RecvMsg->setTextColor(QColor(sendMsgConfig->fontConfig.colorR, sendMsgConfig->fontConfig.colorG, sendMsgConfig->fontConfig.colorB));
     ui->TextEdit_RecvMsg->append(sendContent);
     ui->TextEdit_RecvMsg->setAlignment(Qt::AlignLeft);
 }
