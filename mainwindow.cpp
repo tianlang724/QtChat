@@ -18,7 +18,8 @@ mainwindow::mainwindow(QWidget *parent) :
 /*服务器与ui交互信号绑定
  * */
     //绑定发送按钮
-    connect(ui->Buttom_Send,SIGNAL(clicked()),server,SLOT(SendProcess()));
+    connect(ui->Buttom_Send,SIGNAL(clicked()),this,SLOT(GetSendInformationSlot()));
+    connect(this,SIGNAL(SendInformationOKSignal(CSoftwareConfig)),server,SLOT(SendProcess(CSoftwareConfig)));
     //绑定用户上线，更新在线用户列表
     connect(server,SIGNAL(NewUsrOnline(QString)),this,SLOT(AddOnlineMember(QString)));
     //绑定用户下线，更新在线用户列表
@@ -99,6 +100,12 @@ void mainwindow::openColorSetting() {
     widgetconfig->editTextFontColor = QColorDialog::getColor();
     setColor(widgetconfig->editTextFontColor);
 }
+void mainwindow::GetSendInformationSlot()
+{
+    qDebug("push send button,and get information");
+    CSoftwareConfig config=*widgetconfig;
+    emit SendInformationOKSignal(config);
+}
 
 void mainwindow::updateViewText() {
     QString sendContent = ui->TextEdit_SendMsg->toPlainText();
@@ -129,6 +136,7 @@ void mainwindow::updateViewText() {
     ui->TextEdit_RecvMsg->append(sendContent);
     ui->TextEdit_RecvMsg->setAlignment(Qt::AlignLeft);
 }
+
 /*
  * 新用户上线更新
  * */

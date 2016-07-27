@@ -1,19 +1,8 @@
 #include "cudpbase.h"
-/*
-CUdpBase::CUdpBase()
+void CUdpBase::SendProcess(CSoftwareConfig config)
 {
-
-}
-
-CUdpBase::~CUdpBase()
-{
-
-}
-*/
-void CUdpBase::SendProcess()
-{
-    qDebug("发送按钮点击");
-    QByteArray datagram=CMsgOperation::createChatMsg("zh","song",10,QColor(122,12,12),0,0,"nihao");
+    qDebug("发送信息");
+    QByteArray datagram=CMsgOperation::createChatMsg(config);
     udpSocket->writeDatagram(datagram.data(),datagram.size(),remoteIP,remoteUpdPort);
 }
 void CUdpBase::ReadPendingData()
@@ -30,8 +19,9 @@ void CUdpBase::ReadPendingData()
 }
 void CUdpBase::ProcessDataMsg(QJsonObject json)
 {
-    QString usrName=json.value("userName").toString();
-    QString context=json.value("content").toString();
+    CSoftwareConfig config;
+    config.recvUsr=json.value("userName").toString();
+    config.recvMsg=json.value("content").toString();
     QJsonObject fontFamilyJson=json.value("fontStyle").toObject();
     QString fontFamily=fontFamilyJson.value("fontFamily").toString();
     int fontPointSize=fontFamilyJson.value("fontPointSize").toInt();
@@ -43,10 +33,12 @@ void CUdpBase::ProcessDataMsg(QJsonObject json)
     b=colorJson.value("b").toInt();
     g=colorJson.value("g").toInt();
     QColor color(r,b,g);
+    QFont font=QFont(fontFamily,fontPointSize,-1,isItatic);
+    font.setBold(isBold);
+
+    config.viewTextFontStyle=font;
+    config.viewTextFontColor=color;
+    emit InformUIRecvMsg(config);
 
 }
-/*
-void CUdpBase::ProcessRecvMsg(QByteArray data)
-{
 
-} */

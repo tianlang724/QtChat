@@ -30,9 +30,8 @@ public:
     void configWidgets();
     QString username;
     Server *server;
-
-public:
     CSoftwareConfig *widgetconfig;
+
 
 
 public slots:
@@ -44,6 +43,9 @@ public slots:
     void ShowMemberDetial(QListWidgetItem *item);
     void PointToPointChat(QListWidgetItem *item);
     void updateViewText();
+    void GetSendInformationSlot();
+signals:
+    void SendInformationOKSignal(CSoftwareConfig config);
 
 protected:
      void closeEvent(QCloseEvent *event) override;
