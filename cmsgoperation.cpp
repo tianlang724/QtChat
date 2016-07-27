@@ -62,20 +62,18 @@ QByteArray CMsgOperation::createChatMsg(QString username, QString fontFamily, in
 QByteArray CMsgOperation::createChatMsg(CSoftwareConfig config)
 {
     QMap<QString, QVariant> fontStyleMap;
-    QVariant fontFamilyVariant(config.editTextFontStyle.family());
-    QVariant fontPointSizeVariant(config.editTextFontStyle.pointSize());
-    QVariant itaticVariant(config.editTextFontStyle.italic());
-    QVariant boldVariant(config.editTextFontStyle.bold());
+    QVariant fontFamilyVariant(config.fontConfig.fontFamily);
+    QVariant fontPointSizeVariant(config.fontConfig.fontPointSize);
+    QVariant itaticVariant(config.fontConfig.itatic);
+    QVariant boldVariant(config.fontConfig.bold);
     fontStyleMap.insert("fontFamily", fontFamilyVariant);
     fontStyleMap.insert("fontPointSize", fontPointSizeVariant);
     fontStyleMap.insert("isItatic", itaticVariant);
     fontStyleMap.insert("isBold", boldVariant);
     QMap<QString, QVariant> rbgVariant;
-    int r,b,g;
-    config.editTextFontColor.getRgb(&r, &b, &g);
-    rbgVariant.insert("r", r);
-    rbgVariant.insert("b", b);
-    rbgVariant.insert("g", g);
+    rbgVariant.insert("r", config.fontConfig.colorR);
+    rbgVariant.insert("b", config.fontConfig.colorB);
+    rbgVariant.insert("g", config.fontConfig.colorG);
     QVariant colorStyle(rbgVariant);
     fontStyleMap.insert("color", colorStyle);
     QVariant fontStyleMapVar(fontStyleMap);

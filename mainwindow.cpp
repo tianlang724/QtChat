@@ -103,7 +103,7 @@ void mainwindow::openColorSetting() {
 void mainwindow::GetSendInformationSlot()
 {
     qDebug("push send button,and get information");
-    CSoftwareConfig config=*widgetconfig;
+    CSoftwareConfig config=*sendMsgConfig;
     emit SendInformationOKSignal(config);
 }
 

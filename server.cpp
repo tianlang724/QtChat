@@ -74,7 +74,6 @@ Server::ProcessRecvMsg(QByteArray data)
                 mOnlineUsrMap->erase(it);
                 //用户下线了，构造信号函数，通知窗口更新用户列表
                 emit OldUsrOffline(username);
-
             }
         }
     }
