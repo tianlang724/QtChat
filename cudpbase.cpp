@@ -20,6 +20,8 @@ void CUdpBase::ProcessDataMsg(QJsonObject json)
 {
     CSoftwareConfig config;
     config.chatUsr=json.value("userName").toString();
+    if(config.chatUsr==myName)
+        return ;
     config.chatMsg=json.value("content").toString();
     QJsonObject fontFamilyJson=json.value("fontStyle").toObject();
     config.fontConfig.fontFamily=fontFamilyJson.value("fontFamily").toString();

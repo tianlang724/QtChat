@@ -1,4 +1,3 @@
-
 #include "server.h"
 
 #define UDP_LISTEN_PORT 6666
@@ -32,6 +31,9 @@ Server::LoginBrocast(QString username)
 {
 
     qDebug("广播上线消息");
+    myName=username;
+    mOnlineUsrMap->insert(username,myIP);
+    emit NewUsrOnline(username);
     QByteArray datagram=CMsgOperation::createBroadcast(1, username, myIP.toString());
     udpSocket->writeDatagram(datagram.data(),datagram.size(),remoteIP,remoteUpdPort);
 
@@ -41,7 +43,7 @@ Server::LogoutBrocast(QString username)
 {
     qDebug("广播下线消息");
     QByteArray datagram=CMsgOperation::createBroadcast(0, username, myIP.toString());
-    udpSocket->writeDatagram(datagram.data(),datagram.size(),remoteIP,remoteUpdPort);
+    int ret=udpSocket->writeDatagram(datagram.data(),datagram.size(),remoteIP,remoteUpdPort);
 }
 
 void
@@ -62,16 +64,26 @@ Server::ProcessRecvMsg(QByteArray data)
         username=attr.value("userName").toString();
         ipString=attr.value("ipAddress").toString();
         QHostAddress ip=QHostAddress(ipString);
+        QMap<QString,QHostAddress>::iterator itfind;
+        itfind=mOnlineUsrMap->find(username);
         if((*it)=="online"){
-            mOnlineUsrMap->insert(username,ip);
-            //构造信号函数，通知窗口更新用户列表
-            emit NewUsrOnline(username);
+            if(itfind==mOnlineUsrMap->end())
+            {
+                mOnlineUsrMap->insert(username,ip);
+                //构造信号函数，通知窗口更新用户列表
+                emit NewUsrOnline(username);
+            }
+            if(username!=myName)
+            {
+                QByteArray datagram=CMsgOperation::createBroadcast(1, myName, myIP.toString());
+                qint64 ret=udpSocket->writeDatagram(datagram.data(),datagram.size(),QHostAddress(ipString),remoteUpdPort);
+                if(ret==0)
+                    qDebug("回复广播消息失败");
+            }
         }
         else if((*it)=="offline"){
-            QMap<QString,QHostAddress>::iterator it;
-            it= mOnlineUsrMap->find(username);
-            if(it!=mOnlineUsrMap->end()){
-                mOnlineUsrMap->erase(it);
+            if(itfind!=mOnlineUsrMap->end()){
+                mOnlineUsrMap->erase(itfind);
                 //用户下线了，构造信号函数，通知窗口更新用户列表
                 emit OldUsrOffline(username);
             }

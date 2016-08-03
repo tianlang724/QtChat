@@ -14,6 +14,7 @@ public:
     quint16 myUpdPort;
     QHostAddress remoteIP;
     quint16 remoteUpdPort;
+    QString myName;
     //处理收到的聊天消息
     void ProcessDataMsg(QJsonObject json);
     virtual void ProcessRecvMsg(QByteArray data)=0;

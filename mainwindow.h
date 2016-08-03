@@ -44,6 +44,7 @@ public slots:
     void ShowMemberDetial(QListWidgetItem *item);
     void PointToPointChat(QListWidgetItem *item);
     void updateViewText();
+    void updateViewText(CSoftwareConfig config);
     void GetSendInformationSlot();
 signals:
     void SendInformationOKSignal(CSoftwareConfig config);

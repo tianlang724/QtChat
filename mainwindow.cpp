@@ -16,7 +16,7 @@ mainwindow::mainwindow(QWidget *parent) :
 {
     ui->setupUi(this);
     initWidgets();
-/*服务器与ui交互信号绑定
+    /*服务器与ui交互信号绑定
  * */
     //绑定发送按钮
     connect(ui->Buttom_Send,SIGNAL(clicked()),this,SLOT(GetSendInformationSlot()));
@@ -32,6 +32,8 @@ mainwindow::mainwindow(QWidget *parent) :
     //用户列表双击事件绑定，双击建立私人聊天
     connect(ui->listWidget_OnMembers,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
             this,SLOT(PointToPointChat(QListWidgetItem*)));
+    //绑定接受数据
+    connect(server,SIGNAL(InformUIRecvMsg(CSoftwareConfig)),this,SLOT(updateViewText(CSoftwareConfig)));
 }
 
 mainwindow::~mainwindow()
@@ -84,8 +86,8 @@ void mainwindow::updateFontStyle() {
     QFont currentFont = ui->Comb_Font->currentFont();
     sendMsgConfig->fontConfig.fontPointSize = ui->SBox_FontSize->value();
     sendMsgConfig->fontConfig.fontFamily = currentFont.family();
-//    widgetconfig->editTextFontStyle = ui->Comb_Font->currentFont();
-//    widgetconfig->editTextFontStyle.setPointSize(ui->SBox_FontSize->value());
+    //    widgetconfig->editTextFontStyle = ui->Comb_Font->currentFont();
+    //    widgetconfig->editTextFontStyle.setPointSize(ui->SBox_FontSize->value());
     if (ui->CB_Italic->isChecked()) {
         sendMsgConfig->fontConfig.itatic = true;
         currentFont.setItalic(sendMsgConfig->fontConfig.itatic);
@@ -122,6 +124,8 @@ void mainwindow::GetSendInformationSlot()
 
 void mainwindow::updateViewText() {
     QString sendContent = ui->TextEdit_SendMsg->toPlainText();
+    sendMsgConfig->chatMsg=sendContent;
+    ui->TextEdit_SendMsg->clear();
     if(sendContent == NULL) return;
     ui->TextEdit_RecvMsg->setTextBackgroundColor(Qt::GlobalColor::gray);
     ui->TextEdit_RecvMsg->setFontFamily("WenQuanYi Micro Hei");
@@ -149,6 +153,33 @@ void mainwindow::updateViewText() {
     ui->TextEdit_RecvMsg->append(sendContent);
     ui->TextEdit_RecvMsg->setAlignment(Qt::AlignLeft);
 }
+void mainwindow::updateViewText(CSoftwareConfig config) {
+    ui->TextEdit_RecvMsg->setTextBackgroundColor(Qt::GlobalColor::gray);
+    ui->TextEdit_RecvMsg->setFontFamily("WenQuanYi Micro Hei");
+    ui->TextEdit_RecvMsg->setFontPointSize(10);
+    ui->TextEdit_RecvMsg->setFontItalic(false);
+    ui->TextEdit_RecvMsg->setFontWeight(QFont::Thin);
+    ui->TextEdit_RecvMsg->setTextColor(Qt::GlobalColor::black);
+    QTime currentSendTime = QTime::currentTime();
+    ui->TextEdit_RecvMsg->append(currentSendTime.toString());
+    ui->TextEdit_RecvMsg->setAlignment(Qt::AlignCenter);
+    ui->TextEdit_RecvMsg->setTextBackgroundColor(Qt::GlobalColor::gray);
+    ui->TextEdit_RecvMsg->setFontFamily("WenQuanYi Micro Hei");
+    ui->TextEdit_RecvMsg->setFontPointSize(10);
+    ui->TextEdit_RecvMsg->setFontItalic(false);
+    ui->TextEdit_RecvMsg->setFontWeight(QFont::Thin);
+    ui->TextEdit_RecvMsg->setTextColor(Qt::GlobalColor::black);
+    ui->TextEdit_RecvMsg->append(config.chatUsr + " 说:");
+    ui->TextEdit_RecvMsg->setAlignment(Qt::AlignLeft);
+    ui->TextEdit_RecvMsg->setTextBackgroundColor(Qt::GlobalColor::transparent);
+    ui->TextEdit_RecvMsg->setFontFamily(config.fontConfig.fontFamily);
+    ui->TextEdit_RecvMsg->setFontPointSize(config.fontConfig.fontPointSize);
+    ui->TextEdit_RecvMsg->setFontItalic(config.fontConfig.itatic);
+    ui->TextEdit_RecvMsg->setFontWeight(config.fontConfig.bold == true ? QFont::Bold: QFont::Thin);
+    ui->TextEdit_RecvMsg->setTextColor(QColor(config.fontConfig.colorR, config.fontConfig.colorG, config.fontConfig.colorB));
+    ui->TextEdit_RecvMsg->append(config.chatMsg);
+    ui->TextEdit_RecvMsg->setAlignment(Qt::AlignLeft);
+}
 
 /*
  * 新用户上线更新
@@ -166,20 +197,18 @@ void mainwindow::RemoveOnlineMember(QString username)
 {
     QList<QListWidgetItem*> qlistItems=ui->listWidget_OnMembers->findItems(username,0);
     QList<QListWidgetItem*>::iterator it=qlistItems.begin();
-    if(it!=qlistItems.end()){
-        ui->listWidget_OnMembers->removeItemWidget(*it);
-        it++;
-        }
+    ui->listWidget_OnMembers->removeItemWidget(*it);
+    delete *it;
 }
 /*
  * 显示用户详细信息
  * */
 void mainwindow::ShowMemberDetial(QListWidgetItem *item)
 {
-   qDebug("show user detail");
-   QString usrname=item->text();
-   QString ip=server->mOnlineUsrMap->find(usrname).value().toString();
-   QToolTip::showText(cursor().pos(),"username: "+usrname+"\n"+"IP："+ip);
+    qDebug("show user detail");
+    QString usrname=item->text();
+    QString ip=server->mOnlineUsrMap->find(usrname).value().toString();
+    QToolTip::showText(cursor().pos(),"username: "+usrname+"\n"+"IP："+ip);
 
 }
 /* 建立私聊窗口

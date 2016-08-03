@@ -79,8 +79,8 @@ QByteArray CMsgOperation::createChatMsg(CSoftwareConfig config)
     QVariant fontStyleMapVar(fontStyleMap);
 
     QMap<QString, QVariant> chatContentMap;
-    chatContentMap.insert("userName",config.sendUsr);
-    chatContentMap.insert("content", config.sendMsg);
+    chatContentMap.insert("userName",config.chatUsr);
+    chatContentMap.insert("content", config.chatMsg);
     chatContentMap.insert("fontStyle", fontStyleMapVar);
     QVariant chatMsgContent(chatContentMap);
     QMap<QString, QVariant> chatMsgMap;
